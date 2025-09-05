@@ -19,6 +19,6 @@
         :target: https://pypi.python.org/pypi/invenio-faculty-profiles
 
 .. image:: https://img.shields.io/github/license/ubiquitypress/invenio-faculty-profiles.svg
-        :target: https://github.com/ubiquitypress/invenio-faculty-profiles/blob/master/LICENSE
+        :target: https://github.com/ubiquitypress/invenio-faculty-profiles/blob/main/LICENSE
 
 Invenio module to handle faculty profiles as records.
