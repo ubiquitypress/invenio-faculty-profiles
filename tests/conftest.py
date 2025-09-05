@@ -59,6 +59,7 @@ def create_app(instance_path, entry_points):
 @pytest.fixture(scope="module")
 def app_config(app_config):
     """Override pytest-invenio app_config fixture."""
+    app_config["THEME_FRONTPAGE"] = False  # FIXME:
     app_config["RECORDS_REFRESOLVER_CLS"] = (
         "invenio_records.resolver.InvenioRefResolver"
     )
