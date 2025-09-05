@@ -1,0 +1,95 @@
+{# -*- coding: utf-8 -*-
+
+  This file is part of Invenio.
+  Copyright (C) 2025 Ubiquity Press.
+
+  Invenio is free software; you can redistribute it and/or modify it
+  under the terms of the MIT License; see LICENSE file for more details.
+#}
+
+{%- extends config.BASE_TEMPLATE %}
+
+{%- from "invenio_theme/macros/truncate.html" import truncate_text %}
+
+{% set metadata= faculty_profile.metadata %}
+{%- set title = faculty_profile["metadata"]["given_name"] %}
+
+{%- block page_body %}
+
+<div class="ui container">
+  <div class="ui relaxed grid mt-5">
+    <div class="two column row top-padded">
+      <article
+        class="sixteen wide tablet eleven wide computer column main-record-content"
+      >
+        <section id="profile-main" aria-label="{{_('Profile image and name')}}">
+          <div class="ui center aligned two column grid">
+            <div class="column six wide middle aligned">
+              <img
+                src="{{ faculty_profile.links.photo | resolve_faculty_profile_photo(faculty_profile.id) }}"
+                alt="pofile picture"
+                class="ui medium bordered circular image"
+              />
+            </div>
+            <spam class="column left aligned">
+              <h1 id="record-title" class="wrap-overflowing-text">
+                {{ metadata.given_names}} {{ metadata.family_name}}
+              </h1>
+              <p>{{metadata.preferred_pronouns}}</p>
+              <p>{{ metadata.title_status}}, {{ metadata.institution }}</p>
+              {% set biography = metadata.get('biography') %} {% if biography %}
+              <section
+                id="biography"
+                class="rel-mt-2 rich-input-content"
+                aria-label="{{ _('Profile biography') }}"
+              >
+                <h2 id="description-heading">
+                  {{ _('Biography') }}
+                </h2>
+                {# biography data is being sanitized by marshmallow in the
+                backend #}
+                <div style="word-wrap: break-word">{{ biography | safe }}</div>
+              </section>
+              {% endif %}
+            </spam>
+          </div>
+        </section>
+        <div class="ui divider"></div>
+          {% set education = metadata.get('education') %} {% if education %}
+          <h2 id="description-heading">
+            {{ _('Education') }}
+          </h2>
+          <div style="word-wrap: break-word">{{ education | safe }}</div>
+        {% endif %}
+      </article>
+
+      <aside
+        class="sixteen wide tablet five wide computer column sidebar"
+        aria-label="{{ _('Record details') }}"
+      >
+        {% if permissions.can_create %}
+        <section
+          id="record-manage-menu"
+          aria-label="{{ _('Record management') }}"
+          class="ui grid segment computer only sidebar-container rdm-sidebar"
+        >
+          <div class="column" id="recordManagement">
+            <div class="column pb-5 pt-5">
+              <a
+                href="{{ url_for('invenio_faculty_profiles.faculty_profiles_edit', pid_value=faculty_profile.id)}}"
+                class="ui medium fluid icon left labeled button warning"
+                >
+                <i aria-hidden="true" class="edit icon"></i>
+                Edit
+              </a
+              >
+            </div>
+          </div>
+        </section>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</div>
+
+{%- endblock page_body %}

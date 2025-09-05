@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "local://faculty_profiles/faculty-profiles-v1.0.0.json",
+  "additionalProperties": false,
+  "title": "Invenio Faculty Profiles Schema v1.0.0",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "description": "JSONSchema declaration.",
+      "type": "string"
+    },
+    "files": {
+      "type": "object",
+      "description": "Files associated with the record",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Set to false for metadata only records."
+        }
+      }
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Resource metadata.",
+      "additionalProperties": false,
+      "properties": {
+        "preferred_pronouns": {
+          "description": "Researcher preferred pronouns",
+          "type": "string"
+        },
+        "family_name": {
+          "description": "Researcher family name.",
+          "type": "string"
+        },
+        "given_names": {
+          "description": "Researcher given names.",
+          "type": "string"
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
+          },
+          "uniqueItems": true
+        },
+        "handlers": {
+          "type": "array",
+          "items": {
+            "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
+          },
+          "uniqueItems": true
+        },
+        "type": {
+          "description": "Profile type.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "$ref": "local://definitions-v1.0.0.json#/identifier"
+            }
+          }
+        },
+        "website": {
+          "description": "Researcher website URL.",
+          "type": "string"
+        },
+        "subjects": {
+          "$ref": "local://records/definitions-v2.0.0.json#/subjects"
+        },
+        "funding": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "funder": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "$ref": "local://definitions-v1.0.0.json#/identifier"
+                  }
+                }
+              },
+              "award": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "title": {
+                    "type": "object"
+                  },
+                  "number": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "$ref": "local://definitions-v1.0.0.json#/identifier"
+                  },
+                  "identifiers": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "local://definitions-v1.0.0.json#/identifiers_with_scheme"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "telephone": {
+          "description": "Researcher public telephone.",
+          "type": "string"
+        },
+        "biography": {
+          "description": "Researcher biography.",
+          "type": "string"
+        },
+        "interests": {
+          "description": "Researcher interests.",
+          "type": "string"
+        },
+        "title_status": {
+          "description": "Researcher title.",
+          "type": "string"
+        },
+        "department": {
+          "description": "Researcher department.",
+          "type": "string"
+        },
+        "institution": {
+          "description": "Researcher institution.",
+          "type": "string"
+        },
+        "education": {
+          "description": "Researcher education.",
+          "type": "string"
+        },
+        "email_address": {
+          "description": "Researcher email address.",
+          "type": "string"
+        },
+        "contact_email_address": {
+          "description": "Researcher public email address.",
+          "type": "string"
+        },
+        "office_address": {
+          "description": "Researcher office address.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

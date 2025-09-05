@@ -1,0 +1,154 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name="invenio-faculty-profiles"
+description = "Ability to provide create, update, delete and show faculty profiles, to showcase a faculty''s record providers."
+authors=[
+  {name = "Ubiquity Press", email = "tech@ubiquitypress.com"}
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+   "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dynamic = ["version"]
+keywords = ["invenio", "researcher", "profiles", "faculty"]
+license = {file = "LICENSE"}
+readme = "README.rst"
+
+requires-python = ">=3.9"
+dependencies = [
+    "arrow>=0.16.0",
+    "flask-resources>=1.0.0,<2.0.0",
+    "invenio-accounts>=6.0.0,<7.0.0",
+    "invenio-i18n>=3.0.0,<4.0.0",
+    "invenio-rdm-records>=20.0.0,<21.0.0",
+    "invenio-records-permissions>=1.0.0,<2.0.0",
+    "invenio-vocabularies>=8.1.0,<9.0.0",
+    "jsonpatch>=1.26",
+    "jsonref>=0.2",
+    "jsonresolver>=0.3.1",
+    "jsonschema>=4.3.0,<5.0.0",
+    "phonenumberslite>=9.0.0,<10",
+]
+urls = {Repository = "https://github.com/ubiquitypress/invenio-faculty-profiles"}
+
+[project.optional-dependencies]
+tests=[
+    "invenio-access>=4.0.0,<5.0.0",
+    "invenio-app>=2.0.0,<3.0.0",
+    "invenio-db[postgresql,mysql]>=2.0.0,<3.0.0",
+    "invenio-users-resources>=8.0.0,<9.0.0",
+    "invenio-vocabularies>=8.0.0,<9.0.0",
+    "pytest-black>=0.3.0",
+    "pytest-invenio>=3.0.0,<4.0.0",
+    "sphinx>=4.5",
+]
+opensearch2 = [
+    "invenio-search[opensearch2]>=3.0.0,<4.0.0",
+]
+
+# Entrypoints
+[project.entry-points."invenio_assets.webpack"]
+invenio_faculty_profiles = "invenio_faculty_profiles.webpack:faculty_profiles"
+
+[project.entry-points."invenio_base.apps"]
+invenio_faculty_profiles = "invenio_faculty_profiles.ext:FacultyProfileExtension"
+
+[project.entry-points."invenio_base.api_apps"]
+invenio_faculty_profiles = "invenio_faculty_profiles.ext:FacultyProfileExtension"
+
+[project.entry-points."invenio_base.api_blueprints"]
+invenio_faculty_profiles_search_config = "invenio_faculty_profiles.views:create_config_blueprint"
+invenio_faculty_profiles = "invenio_faculty_profiles.views:create_record_blueprint"
+
+[project.entry-points."invenio_base.blueprints"]
+invenio_faculty_profiles_ext = "invenio_faculty_profiles.views:blueprint"
+invenio_faculty_profiles = "invenio_faculty_profiles.views:create_ui_blueprint"
+
+[project.entry-points."invenio_base.api_finalize_app"]
+invenio_faculty_profiles = "invenio_faculty_profiles.ext:api_finalize_app"
+
+[project.entry-points."invenio_base.finalize_app"]
+invenio_faculty_profiles = "invenio_faculty_profiles.ext:finalize_app"
+
+[project.entry-points."invenio_db.alembic"]
+invenio_faculty_profiles = "invenio_faculty_profiles:alembic"
+
+[project.entry-points."invenio_db.models"]
+invenio_faculty_profiles = "invenio_faculty_profiles.records.models"
+
+[project.entry-points."invenio_i18n.translations"]
+messages = "invenio_faculty_profiles"
+
+[project.entry-points."invenio_jsonschemas.schemas"]
+faculty_profiles = "invenio_faculty_profiles.records.jsonschemas"
+
+[project.entry-points."invenio_search.mappings"]
+facultyprofiles = "invenio_faculty_profiles.records.mappings"
+
+# Tools in alphabetical order
+[tool.babel.compile_catalog]
+directory = "invenio_faculty_profiles/translations/"
+use_fuzzy = true
+
+[tool.babel.extract_messages]
+copyright_holder = "Ubiquity Press"
+msgid_bugs_address = "tech@ubiquitypress.com"
+mapping_file = "babel.ini"
+output_file = "invenio_faculty_profiles/translations/messages.pot"
+add_comments = "NOTE"
+
+[tool.babel.init_catalog]
+input_file = "invenio_faculty_profiles/translations/messages.pot"
+output_dir = "invenio_faculty_profiles/translations/"
+
+[tool.babel.javascript]
+"**.js" = { encoding = "utf-8", extract_messages = ["$_", "jQuery._"] }
+
+[tool.babel.jinja2]
+"**/templates/**.html" = { encoding = "utf-8" }
+
+[tool.babel.python]
+"**.py" = { encoding = "utf-8" }
+
+[tool.babel.update_catalog]
+input_file = "invenio_faculty_profiles/translations/messages.pot"
+output_dir = "invenio_faculty_profiles/translations/"
+
+[tool.hatch.version]
+path = "invenio_faculty_profiles/__init__.py"
+
+[tool.isort]
+profile = "black"
+
+[tool.pydocstyle]
+add_ignore = [
+    "D401",
+    "D403",
+]
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--black --isort --pydocstyle --doctest-glob=\"*.rst\" --doctest-modules --cov=invenio_faculty_profiles --cov-report=term-missing"
+testpaths = [
+    "docs",
+    "tests",
+    "invenio_faculty_profiles",
+]
+filterwarnings = [
+    "ignore::marshmallow.warnings.RemovedInMarshmallow4Warning",
+]
+
+

@@ -1,0 +1,27 @@
+{% extends "invenio_faculty_profiles/details/base.html" %}
+
+{%- block javascript %}
+{{ super() }}
+{{ webpack['invenio-faculty-profiles-record.js'] }}
+{%- endblock javascript %}
+
+{% set active_faculty_profiles_header_menu_item = 'search' %}
+
+
+{%- set title = faculty_profile.given_names + ' ' + faculty_profile.family_name + _(" details") -%}
+
+
+{%- block page_body %}
+  {{ super() }}
+  <div class="ui container grid communities-settings rel-m-2">
+    <div
+      id="app"
+      data-faculty-profile='{{ faculty_profile_ui | tojson }}'
+      data-has-photo='{{ has_photo | tojson }}'
+      data-has-cv='{{ has_cv | tojson }}'
+      data-photo-max-size='{{ photo_quota | tojson }}'
+      data-permissions='{{ permissions | tojson }}'
+    >
+    </div>
+  </div>
+{%- endblock page_body %}

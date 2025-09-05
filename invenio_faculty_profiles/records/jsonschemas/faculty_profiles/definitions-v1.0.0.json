@@ -1,0 +1,42 @@
+{
+  "identifiers_with_scheme": {
+    "description": "Identifiers object with identifier value and scheme in separate keys.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "identifier": {
+        "$ref": "#/identifier"
+      },
+      "scheme": {
+        "$ref": "#/scheme"
+      }
+    }
+  },
+  "identifiers": {
+    "description": "Identifiers object (keys being scheme, value being the identifier).",
+    "type": "object",
+    "additionalProperties": {
+      "$ref": "local://definitions-v1.0.0.json#/identifier"
+    }
+  },
+  "subject": {
+    "description": "Term related to entry.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "$ref": "local://definitions-v1.0.0.json#/identifier"
+      },
+      "subject": {
+        "type": "string"
+      }
+    }
+  },
+  "subjects": {
+    "type": "array",
+    "items": {
+      "$ref": "#/subject"
+    },
+    "uniqueItems": true
+  }
+}

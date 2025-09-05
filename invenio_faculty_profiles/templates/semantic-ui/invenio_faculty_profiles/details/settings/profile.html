@@ -1,0 +1,32 @@
+{# -*- coding: utf-8 -*-
+
+  This file is part of Invenio.
+  Copyright (C) 2016-2020 CERN.
+
+  Invenio is free software; you can redistribute it and/or modify it
+  under the terms of the MIT License; see LICENSE file for more details.
+#}
+
+{% extends "invenio_faculty_profiles/details/base.html" %}
+
+{%- block javascript %}
+{{ super() }}
+{{ webpack['invenio-faculty-profiles-profile.js'] }}
+{%- endblock javascript %}
+
+{% set active_faculty_profiles_header_menu_item = 'settings' %}
+
+{%- block page_body %}
+  {{ super() }}
+  <div class="ui container grid communities-settings rel-m-2">
+    <div
+      id="app"
+      data-faculty-profile='{{ faculty_profile_ui | tojson }}'
+      data-has-photo='{{ has_photo | tojson }}'
+      data-has-cv='{{ has_cv | tojson }}'
+      data-photo-max-size='{{ photo_quota | tojson }}'
+      data-permissions='{{ permissions | tojson }}'
+    >
+    </div>
+  </div>
+{%- endblock page_body %}
