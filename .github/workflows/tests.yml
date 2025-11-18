@@ -31,6 +31,3 @@ on:
 jobs:
   Python:
       uses: inveniosoftware/workflows/.github/workflows/tests-python.yml@master
-      with:
-        search-service: '["opensearch2", "elasticsearch7"]'
-        python-version: '["3.11", "3.13"]'

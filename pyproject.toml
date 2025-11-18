@@ -59,9 +59,6 @@ tests=[
 opensearch2 = [
     "invenio-search[opensearch2]>=3.0.0,<4.0.0",
 ]
-elasticsearch7 = [
-    "invenio-search[elasticsearch7]>=3.0.0,<4.0.0",
-]
 
 # Entrypoints
 [project.entry-points."invenio_assets.webpack"]
