@@ -262,6 +262,62 @@
         "properties": {
           "enabled": {
             "type": "boolean"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "totalbytes": {
+            "type": "long"
+          },
+          "mimetypes": {
+            "type": "keyword"
+          },
+          "types": {
+            "type": "keyword"
+          },
+          "entries": {
+            "type": "object",
+            "properties": {
+              "uuid": {
+                "enabled": false
+              },
+              "version_id": {
+                "enabled": false
+              },
+              "metadata": {
+                "type": "object",
+                "dynamic": "true"
+              },
+              "checksum": {
+                "type": "keyword"
+              },
+              "key": {
+                "type": "keyword"
+              },
+              "mimetype": {
+                "type": "keyword"
+              },
+              "size": {
+                "type": "long"
+              },
+              "ext": {
+                "type": "keyword"
+              },
+              "object_version_id": {
+                "enabled": false
+              },
+              "file_id": {
+                "enabled": false
+              },
+              "access": {
+                "type": "object",
+                "properties": {
+                  "hidden": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
           }
         }
       }

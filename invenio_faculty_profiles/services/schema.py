@@ -49,28 +49,31 @@ identifiers_schemes = LocalProxy(
 )
 
 
+class FileSchema(Schema):
+    """File schema."""
+
+    # File fields
+    id = fields.String(attribute="file.id")
+    checksum = fields.String(attribute="file.checksum")
+    ext = fields.String(attribute="file.ext")
+    size = fields.Integer(attribute="file.size")
+    mimetype = fields.String(attribute="file.mimetype")
+    storage_class = fields.String(attribute="file.storage_class")
+
+    # FileRecord fields
+    key = SanitizedUnicode()
+
+
 class FilesSchema(Schema):
     """Basic files schema class."""
 
     enabled = fields.Bool(missing=True)
-    # allow unsetting
-    default_preview = SanitizedUnicode(allow_none=True)
 
-    def get_attribute(self, obj, attr, default):
-        """Override how attributes are retrieved when dumping.
-
-        NOTE: We have to access by attribute because although we are loading
-              from an external pure dict, but we are dumping from a data-layer
-              object whose fields should be accessed by attributes and not
-              keys. Access by key runs into FilesManager key access protection
-              and raises.
-        """
-        value = getattr(obj, attr, default)
-
-        if attr == "default_preview" and not value:
-            return default
-
-        return value
+    entries = fields.Dict(
+        keys=SanitizedUnicode(),
+        values=NestedAttribute(FileSchema),
+        dump_only=True,
+    )
 
 
 class FundingSchema(Schema):

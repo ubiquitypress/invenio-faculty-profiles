@@ -95,7 +95,9 @@ class FacultyProfile(Record):
     pid = DirectIdPID()
 
     # Faculty Profile File related fields
-    files = FilesField(file_cls=FacultyProfileFile, store=False)
+    files = FilesField(
+        file_cls=FacultyProfileFile, store=False, dump=True, dump_entries=True
+    )
     bucket_id = ModelField(dump=False)
     bucket = ModelField(dump=False)
 

@@ -52,11 +52,12 @@ class FacultyProfileCreateForm extends Component {
   deserializeProfile = (initialValues) => {
     return {
       ...initialValues,
+      files: { enabled: initialProfile.files.enabled },
       metadata: {
         ...initialValues.metadata,
         identifiers: _map(
           _get(initialValues, "metadata.identifiers", []),
-          "identifier"
+          "identifier",
         ),
       },
     };
@@ -80,15 +81,15 @@ class FacultyProfileCreateForm extends Component {
     const submittedIdentifiers = _get(
       submittedProfile,
       identifiersFieldPath,
-      []
+      [],
     );
     const identifiers = submittedIdentifiers.map((identifier) => {
       return findField(initialIdentifiers, "identifier", identifier);
     });
     const filtered = Object.fromEntries(
       Object.entries(submittedProfile.metadata).filter(
-        ([_, v]) => v != null && v !== ""
-      )
+        ([_, v]) => v != null && v !== "",
+      ),
     );
     return {
       ...submittedProfile,
@@ -110,7 +111,7 @@ class FacultyProfileCreateForm extends Component {
       this.cancellableCreate = withCancel(client.create(payload));
     } else {
       this.cancellableCreate = withCancel(
-        client.update(initialProfile.id, payload)
+        client.update(initialProfile.id, payload),
       );
     }
     try {
@@ -224,7 +225,7 @@ class FacultyProfileCreateForm extends Component {
                           text: identifier,
                           value: identifier,
                           key: identifier,
-                        })
+                        }),
                       )}
                     />
                   </Grid.Column>
@@ -520,7 +521,7 @@ const optionalJSONParse = (value, missing = null) => {
 const domContainer = document.getElementById("app");
 const initialProfile = optionalJSONParse(
   domContainer.dataset.facultyProfile,
-  {}
+  {},
 );
 const hasPhoto = optionalJSONParse(domContainer.dataset.hasPhoto, false);
 const hasCv = optionalJSONParse(domContainer.dataset.hasCv, false);
@@ -538,6 +539,6 @@ ReactDOM.render(
     permissions={permissions}
     types={types}
   />,
-  domContainer
+  domContainer,
 );
 export default FacultyProfileCreateForm;
