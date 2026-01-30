@@ -519,10 +519,10 @@ const optionalJSONParse = (value, missing = null) => {
 };
 
 const domContainer = document.getElementById("app");
-const initialProfile = optionalJSONParse(
-  domContainer.dataset.facultyProfile,
-  {},
-);
+const initialProfile = optionalJSONParse(domContainer.dataset.facultyProfile, {
+  files: { enabled: true },
+  metadata: {},
+});
 const hasPhoto = optionalJSONParse(domContainer.dataset.hasPhoto, false);
 const hasCv = optionalJSONParse(domContainer.dataset.hasCv, false);
 const photoMaxSize = optionalJSONParse(domContainer.dataset.photoMaxSize, 0);
