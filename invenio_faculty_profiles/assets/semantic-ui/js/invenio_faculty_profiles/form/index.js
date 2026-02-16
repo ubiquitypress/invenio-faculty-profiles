@@ -457,9 +457,9 @@ class FacultyProfileCreateForm extends Component {
                     <Card.Content>
                       <PhotoUploader
                         facultyProfile={initialProfile}
-                        hasPhoto={hasPhoto}
                         defaultPhoto={defaultPhoto}
                         photoMaxSize={photoMaxSize}
+                        onError={this.setGlobalError}
                       />
                     </Card.Content>
                   </Card>
@@ -475,7 +475,7 @@ class FacultyProfileCreateForm extends Component {
                     <Card.Content>
                       <CvUploader
                         facultyProfile={initialProfile}
-                        hasCv={hasCv}
+                        onError={this.setGlobalError}
                       />
                     </Card.Content>
                   </Card>

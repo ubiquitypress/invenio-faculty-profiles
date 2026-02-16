@@ -14,21 +14,25 @@ import { FacultyProfileApi } from "../api";
 import { DeleteButton } from "./DeleteButton";
 
 function noCacheUrl(url) {
+  if (!url) {
+    return url;
+  }
   const result = new URL(url);
   const randomValue = new Date().getMilliseconds() * 5;
   result.searchParams.set("no-cache", randomValue.toString());
   return result.toString();
 }
 
-const PhotoUploader = ({ facultyProfile, defaultPhoto, hasPhoto, onError, photoMaxSize }) => {
+const PhotoUploader = ({ facultyProfile, defaultPhoto, onError, photoMaxSize }) => {
   /* State */
-  // props initilization is fine since original props don't change after
-  // initial mounting.
+  // Check if photo exists by looking in files.entries
+  const hasPhotoFile = facultyProfile?.files?.entries && 
+    Object.keys(facultyProfile.files.entries).some(key => key.startsWith("photo."));
+
   const [photoUrl, photoSetUrl] = useState(facultyProfile?.links?.photo);
   const [photoUpdated, photoSetUpdated] = useState(false);
-  const [photoExists, photoSetExists] = useState(hasPhoto);
+  const [photoExists, photoSetExists] = useState(hasPhotoFile);
 
-  // Nicer naming
   const photoDefault = defaultPhoto;
 
   let dropzoneParams = {
@@ -38,10 +42,14 @@ const PhotoUploader = ({ facultyProfile, defaultPhoto, hasPhoto, onError, photoM
 
       try {
         const client = new FacultyProfileApi();
-        await client.updatePhoto(facultyProfile.id, file);
+        const response = await client.updatePhoto(facultyProfile.id, file);
 
-        const photoUrlNoCache = noCacheUrl(photoUrl);
-        photoSetUrl(photoUrlNoCache);
+        // Get the updated photo URL from the response
+        const updatedPhotoUrl = response.data?.links?.photo;
+        if (updatedPhotoUrl) {
+          const photoUrlNoCache = noCacheUrl(updatedPhotoUrl);
+          photoSetUrl(photoUrlNoCache);
+        }
         photoSetUpdated(true);
         photoSetExists(true);
       } catch (error) {
@@ -67,8 +75,7 @@ const PhotoUploader = ({ facultyProfile, defaultPhoto, hasPhoto, onError, photoM
     const client = new FacultyProfileApi();
     await client.deletePhoto(facultyProfile.id);
 
-    const photoUrlNoCache = noCacheUrl(photoUrl);
-    photoSetUrl(photoUrlNoCache);
+    photoSetUrl(undefined);
     photoSetUpdated(true);
     photoSetExists(false);
   };
@@ -152,7 +159,6 @@ const PhotoUploader = ({ facultyProfile, defaultPhoto, hasPhoto, onError, photoM
 PhotoUploader.propTypes = {
   facultyProfile: PropTypes.object.isRequired,
   defaultPhoto: PropTypes.string.isRequired,
-  hasPhoto: PropTypes.bool.isRequired,
   onError: PropTypes.func.isRequired,
   photoMaxSize: PropTypes.number.isRequired,
 };

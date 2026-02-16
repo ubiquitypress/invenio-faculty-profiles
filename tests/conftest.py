@@ -259,7 +259,7 @@ def employee_profile_data():
             "email_address": "johndoe@example.com",
             "contact_email_address": "johndoe-contact@example.com",
         },
-        "files": {"enabled": False},
+        "files": {"enabled": True},
     }
 
 

@@ -13,19 +13,24 @@ import { FacultyProfileApi } from "../api";
 import { DeleteButton } from "./DeleteButton";
 
 function noCacheUrl(url) {
+  if (!url) {
+    return url;
+  }
   const result = new URL(url);
   const randomValue = new Date().getMilliseconds() * 5;
   result.searchParams.set("no-cache", randomValue.toString());
   return result.toString();
 }
 
-const CvUploader = ({ facultyProfile, hasCv, onError }) => {
+const CvUploader = ({ facultyProfile, onError }) => {
   /* State */
-  // props initilization is fine since original props don't change after
-  // initial mounting.
+  // Check if CV exists by looking in files.entries
+  const hasCvFile = facultyProfile?.files?.entries && 
+    Object.keys(facultyProfile.files.entries).some(key => key.startsWith("cv."));
+  
   const [cvUrl, cvSetUrl] = useState(facultyProfile?.links?.cv);
   const [cvUpdated, cvSetUpdated] = useState(false);
-  const [cvExists, cvSetExists] = useState(hasCv);
+  const [cvExists, cvSetExists] = useState(hasCvFile);
 
   let dropzoneParams = {
     preventDropOnDocument: true,
@@ -34,10 +39,14 @@ const CvUploader = ({ facultyProfile, hasCv, onError }) => {
 
       try {
         const client = new FacultyProfileApi();
-        await client.updateCv(facultyProfile.id, file);
+        const response = await client.updateCv(facultyProfile.id, file);
 
-        const cvUrlNoCache = noCacheUrl(cvUrl);
-        cvSetUrl(cvUrlNoCache);
+        // Get the updated CV URL from the response
+        const updatedCvUrl = response.data?.links?.cv;
+        if (updatedCvUrl) {
+          const cvUrlNoCache = noCacheUrl(updatedCvUrl);
+          cvSetUrl(cvUrlNoCache);
+        }
         cvSetUpdated(true);
         cvSetExists(true);
       } catch (error) {
@@ -63,8 +72,7 @@ const CvUploader = ({ facultyProfile, hasCv, onError }) => {
     const client = new FacultyProfileApi();
     await client.deleteCv(facultyProfile.id);
 
-    const cvUrlNoCache = noCacheUrl(cvUrl);
-    cvSetUrl(cvUrlNoCache);
+    cvSetUrl(undefined);
     cvSetUpdated(true);
     cvSetExists(false);
   };
@@ -124,7 +132,6 @@ const CvUploader = ({ facultyProfile, hasCv, onError }) => {
 
 CvUploader.propTypes = {
   facultyProfile: PropTypes.object.isRequired,
-  hasCv: PropTypes.bool.isRequired,
   onError: PropTypes.func.isRequired,
 };
 

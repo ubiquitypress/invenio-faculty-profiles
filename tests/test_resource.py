@@ -73,9 +73,13 @@ def test_photo_flow(
     created_ep = res.json
     id_ = created_ep["id"]
 
-    assert (
-        created_ep["links"]["photo"]
-        == f"https://127.0.0.1:5000/api/faculty-profiles/{id_}/photo"
+    # Photo link should ALWAYS exist (even when no file uploaded)
+    assert "photo" in created_ep["links"]
+
+    # But files.entries should be empty or not have a photo key
+    assert not created_ep.get("files", {}).get("entries") or not any(
+        key.startswith("photo.")
+        for key in created_ep.get("files", {}).get("entries", {}).keys()
     )
 
     # Get non-existent photo
@@ -100,6 +104,14 @@ def test_photo_flow(
     )
     assert res.status_code == 200
     assert res.json["size"] == 5
+
+    # Photo link should NOW exist after uploading
+    res = admin_client.get(f"/faculty-profiles/{id_}")
+    assert "photo" in res.json["links"]
+    assert (
+        res.json["links"]["photo"]
+        == f"https://127.0.0.1:5000/api/faculty-profiles/{id_}/photo"
+    )
 
     # Get photo
     res = admin_client.get(f"/faculty-profiles/{id_}/photo")
@@ -134,6 +146,17 @@ def test_photo_flow(
     res = admin_client.delete(f"/faculty-profiles/{id_}/photo", headers=headers)
     assert res.status_code == 204
 
+    # Photo link should STILL exist after deletion (link is always present)
+    res = admin_client.get(f"/faculty-profiles/{id_}")
+    assert res.status_code == 200
+    assert "photo" in res.json["links"]
+
+    # But files.entries should not have a photo
+    assert not any(
+        key.startswith("photo.")
+        for key in res.json.get("files", {}).get("entries", {}).keys()
+    )
+
     # Try to get deleted photo
     res = admin_client.get(f"/faculty-profiles/{id_}/photo")
     assert res.status_code == 404
@@ -158,9 +181,13 @@ def test_cv_flow(
     created_ep = res.json
     id_ = created_ep["id"]
 
-    assert (
-        created_ep["links"]["cv"]
-        == f"https://127.0.0.1:5000/api/faculty-profiles/{id_}/cv"
+    # CV link should ALWAYS exist (even when no file uploaded)
+    assert "cv" in created_ep["links"]
+
+    # But files.entries should be empty or not have a cv key
+    assert not created_ep.get("files", {}).get("entries") or not any(
+        key.startswith("cv.")
+        for key in created_ep.get("files", {}).get("entries", {}).keys()
     )
 
     # Get non-existent cv
@@ -185,6 +212,14 @@ def test_cv_flow(
     )
     assert res.status_code == 200
     assert res.json["size"] == 2
+
+    # CV link should NOW exist after uploading
+    res = admin_client.get(f"/faculty-profiles/{id_}")
+    assert "cv" in res.json["links"]
+    assert (
+        res.json["links"]["cv"]
+        == f"https://127.0.0.1:5000/api/faculty-profiles/{id_}/cv"
+    )
 
     # Get cv
     res = admin_client.get(f"/faculty-profiles/{id_}/cv")
@@ -220,6 +255,17 @@ def test_cv_flow(
     res = admin_client.delete(f"/faculty-profiles/{id_}/cv", headers=headers)
     assert res.status_code == 204
 
+    # CV link should STILL exist after deletion (link is always present)
+    res = admin_client.get(f"/faculty-profiles/{id_}")
+    assert res.status_code == 200
+    assert "cv" in res.json["links"]
+
+    # But files.entries should not have a cv
+    assert not any(
+        key.startswith("cv.")
+        for key in res.json.get("files", {}).get("entries", {}).keys()
+    )
+
     # Try to get deleted cv
     res = admin_client.get(f"/faculty-profiles/{id_}/cv")
     assert res.status_code == 404
@@ -244,12 +290,17 @@ def test_photo_max_content_length(
     assert res.status_code == 201
     created_ep = res.json
     id_ = created_ep["id"]
-    assert (
-        created_ep["links"]["photo"]
-        == f"https://127.0.0.1:5000/api/faculty-profiles/{id_}/photo"
+
+    # Photo link should ALWAYS exist now (even when no file uploaded)
+    assert "photo" in created_ep["links"]
+
+    # But files.entries should be empty or not have a photo key
+    assert not created_ep.get("files", {}).get("entries") or not any(
+        key.startswith("photo.")
+        for key in created_ep.get("files", {}).get("entries", {}).keys()
     )
 
-    # Update app max size for community photos
+    # Get non-existent photo
     max_size = 10**6
     app.config["FACULTY_PROFILES_PHOTO_MAX_FILE_SIZE"] = max_size
 

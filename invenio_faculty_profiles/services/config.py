@@ -14,6 +14,7 @@ from invenio_records_resources.services.base.config import (
     FromConfigSearchOptions,
     SearchOptionsMixin,
 )
+from invenio_records_resources.services.base.links import EndpointLink
 from invenio_records_resources.services.records import RecordServiceConfig
 from invenio_records_resources.services.records.components import DataComponent
 from invenio_records_resources.services.records.config import (
@@ -27,9 +28,13 @@ from invenio_records_resources.services.records.params import (
 )
 
 from ..records.api import FacultyProfile
-from .links import FPLink
 from .permissions import FacultyProfilePermissionPolicy
 from .schema import FacultyProfileSchema
+
+
+def link_vars(record, vars):
+    """Update link vars with pid_value."""
+    vars.update({"pid_value": str(record.id)})
 
 
 class SearchOptions(SearchOptionsBase, SearchOptionsMixin):
@@ -72,12 +77,36 @@ class FacultyProfileServiceConfig(RecordServiceConfig, ConfiguratorMixin):
     ]
 
     links_item = {
-        "self": FPLink("{+api}/faculty-profiles/{id}"),
-        "self_html": FPLink("{+ui}/faculty-profiles/{id}"),
-        "edit_html": FPLink("{+ui}/faculty-profiles/{id}/edit"),
-        "photo": FPLink("{+api}/faculty-profiles/{id}/photo"),
-        "cv": FPLink("{+api}/faculty-profiles/{id}/cv"),
-        "records": FPLink("{+api}/faculty-profiles/{id}/records"),
+        "self": EndpointLink(
+            endpoint="faculty-profiles.read",
+            params=["pid_value"],
+            vars=link_vars,
+        ),
+        "self_html": EndpointLink(
+            endpoint="invenio_faculty_profiles.faculty_profile_detail",
+            params=["pid_value"],
+            vars=link_vars,
+        ),
+        "edit_html": EndpointLink(
+            endpoint="invenio_faculty_profiles.faculty_profiles_edit",
+            params=["pid_value"],
+            vars=link_vars,
+        ),
+        "photo": EndpointLink(
+            endpoint="faculty-profiles.read_photo",
+            params=["pid_value"],
+            vars=link_vars,
+        ),
+        "cv": EndpointLink(
+            endpoint="faculty-profiles.read_cv",
+            params=["pid_value"],
+            vars=link_vars,
+        ),
+        "records": EndpointLink(
+            endpoint="faculty-profiles.item_record_search",
+            params=["pid_value"],
+            vars=link_vars,
+        ),
     }
 
 
