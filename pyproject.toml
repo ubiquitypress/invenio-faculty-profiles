@@ -32,11 +32,11 @@ requires-python = ">=3.9"
 dependencies = [
     "arrow>=0.16.0",
     "flask-resources>=1.0.0,<2.0.0",
-    "invenio-accounts>=6.0.0,<7.0.0",
+    "invenio-accounts>=7.0.0,<8.0.0",
     "invenio-i18n>=3.0.0,<4.0.0",
-    "invenio-rdm-records>=23.0.0,<24.0.0",
-    "invenio-records-permissions>=1.0.0,<2.0.0",
-    "invenio-vocabularies>=9.0.0,<10.0.0",
+    "invenio-rdm-records>=23.0.0,<25.0.0",
+    "invenio-records-permissions>=2.0.0,<3.0.0",
+    "invenio-vocabularies>=10.0.0,<11.0.0",
     "jsonpatch>=1.26",
     "jsonref>=0.2",
     "jsonresolver>=0.3.1",
@@ -47,10 +47,10 @@ urls = {Repository = "https://github.com/ubiquitypress/invenio-faculty-profiles"
 
 [project.optional-dependencies]
 tests=[
-    "invenio-access>=4.0.0,<5.0.0",
-    "invenio-app>=2.0.0,<3.0.0",
+    "invenio-access>=5.0.0,<6.0.0",
+    "invenio-app>=3.0.0,<4.0.0",
     "invenio-db[postgresql,mysql]>=2.0.0,<3.0.0",
-    "invenio-users-resources>=9.0.0,<10.0.0",
+    "invenio-users-resources>=10.0.0,<11.0.0",
     "pytest-black>=0.3.0",
     "pytest-invenio>=3.0.0,<4.0.0",
     "sphinx>=4.5",
