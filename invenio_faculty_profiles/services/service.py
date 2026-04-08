@@ -211,28 +211,13 @@ class FacultyProfileService(RecordService):
         # Permissions
         self.require_permission(identity, "search_records", record=record)
 
-        # Prepare and execute the search
         params = params or {}
-        search_result = current_rdm_records_service._search(
-            "search",
+
+        return current_rdm_records_service.search(
             identity,
-            params,
-            search_preference,
-            permission_action=None,
+            params=params,
+            search_preference=search_preference,
+            expand=expand,
             extra_filter=self._setup_record_query(record),
             **kwargs,
-        ).execute()
-
-        return current_rdm_records_service.result_list(
-            current_rdm_records_service,
-            identity,
-            search_result,
-            params,
-            links_tpl=LinksTemplate(
-                current_rdm_records_service.config.links_search_versions,
-                context={"args": params, "id": faculty_profile_id},
-            ),
-            links_item_tpl=current_rdm_records_service.links_item_tpl,
-            expandable_fields=self.expandable_fields,
-            expand=expand,
         )
