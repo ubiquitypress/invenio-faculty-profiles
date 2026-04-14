@@ -23,7 +23,6 @@ from invenio_vocabularies.services.schema import (
     VocabularyRelationSchema as VocabularySchema,
 )
 from marshmallow import EXCLUDE, Schema, ValidationError, fields, validate, validates
-from marshmallow_utils.context import context_schema
 from marshmallow_utils.fields import (
     IdentifierSet,
     NestedAttribute,
@@ -149,8 +148,8 @@ class FacultyProfileSchema(InvenioBaseRecordSchema):
 
     def load_permissions(self, *args, **kwargs):
         """Load permissions."""
-        record = context_schema.get()["record"]
-        identity = context_schema.get()["identity"]
+        record = self.context["record"]
+        identity = self.context["identity"]
         return {
             f"can_{action}": current_profiles_service.check_permission(
                 identity, action, record=record
